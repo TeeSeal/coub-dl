@@ -3,13 +3,13 @@
 A Coub downloading CLI.
 
 ```
-npm i -g coub-dl
+$ npm i -g coub-dl
 ```
 
 In order to see all options use:
 
 ```
-coub-dl --help
+$ coub-dl --help
 ```
 
 ## Usage
@@ -17,13 +17,13 @@ coub-dl --help
 Simplest example:
 
 ```
-coub-dl -i <LINK|ID> -o out.mp4
+$ coub-dl -i <LINK|ID> -o out.mp4
 ```
 
 The output is piped through ffmpeg so you can use multiple formats:
 
 ```
-coub-dl -i <LINK|ID> -o out.gif
+$ coub-dl -i <LINK|ID> -o out.gif
 ```
 
 ### CROP
@@ -31,13 +31,13 @@ coub-dl -i <LINK|ID> -o out.gif
 By default crops a centered square
 
 ```
-coub-dl -i <LINK|ID> -o out.mp4 -c
+$ coub-dl -i <LINK|ID> -o out.mp4 -c
 ```
 
 Otherwise takes FFMPEG crop filter format
 
 ```
-coub-dl -i <LINK|ID> -o out.mp4 -c 500:500:8
+$ coub-dl -i <LINK|ID> -o out.mp4 -c 500:500:8
 ```
 
 ### RESIZE
@@ -45,13 +45,13 @@ coub-dl -i <LINK|ID> -o out.mp4 -c 500:500:8
 Resize to 250 pixel width preserving aspect ratio:
 
 ```
-coub-dl -i <LINK|ID> -o out.mp4 -s 250
+$ coub-dl -i <LINK|ID> -o out.mp4 -s 250
 ```
 
 Resize to 250x100
 
 ```
-coub-dl -i <LINK|ID> -o out.mp4 -s 250x100
+$ coub-dl -i <LINK|ID> -o out.mp4 -s 250x100
 ```
 
 ### ASPECT RATIO
@@ -59,10 +59,8 @@ coub-dl -i <LINK|ID> -o out.mp4 -s 250x100
 Set the output's aspect ratio:
 
 ```
-coub-dl -i <LINK|ID> -o out.mp4 -a 4:3
+$ coub-dl -i <LINK|ID> -o out.mp4 -a 4:3
 ```
-
----
 
 ## Contributing
 
