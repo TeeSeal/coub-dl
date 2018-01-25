@@ -10,8 +10,11 @@ const program = require('commander')
     '-c, --crop [crop]',
     'Crop the output (width:height:x_offset:y_offset)'
   )
+  .option('-s, --size [size]', 'Resize the output (widthxheight)')
+  .option('-a, --aspect [ratio]', 'Set aspect ratio (w:h)')
   .parse(process.argv)
 
+// ---- MAIN ----
 async function run() {
   const { input, output } = program
   if (!input || !output) {
@@ -29,6 +32,7 @@ async function run() {
 
   ffmpegStream = ffmpeg(bufferToStream(coub))
 
+  // CROP
   if (program.crop) {
     let { crop } = program
     if (typeof crop !== 'string') {
@@ -36,13 +40,22 @@ async function run() {
       const offset = width / 2 - height / 2
       crop = `${height}:${height}:${offset}:0`
     }
-
     ffmpegStream.videoFilter(`crop=${crop}`)
   }
+
+  // RESIZE
+  if (program.size) {
+    const [width, height] = program.size.split('x')
+    ffmpegStream.size(`${width || '?'}x${height || '?'}`)
+  }
+
+  // ASPECT RATIO
+  if (program.aspect) ffmpegStream.aspect(program.aspect)
 
   return ffmpegStream.save(output)
 }
 
+// ---- Helpers ----
 function bufferToStream(buffer) {
   const stream = new PassThrough()
   stream.end(buffer)
