@@ -28,7 +28,7 @@ $ coub-dl -i <LINK|ID> -o out.gif
 
 ### CROP
 
-By default crops a centered square
+By default crops a centered square (as big as possible)
 
 ```
 $ coub-dl -i <LINK|ID> -o out.mp4 -c
@@ -37,7 +37,7 @@ $ coub-dl -i <LINK|ID> -o out.mp4 -c
 Otherwise takes FFMPEG crop filter format
 
 ```
-$ coub-dl -i <LINK|ID> -o out.mp4 -c 500:500:8
+$ coub-dl -i <LINK|ID> -o out.mp4 -c 500:500:0:0
 ```
 
 ### RESIZE
