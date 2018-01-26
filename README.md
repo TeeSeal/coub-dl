@@ -71,8 +71,6 @@ coub.crop('500:200:0:0') // Crop 500x200 with no offset from top right
 // => Coub
 ```
 
-Returns: Coub
-
 ---
 
 ### Coub.prototype.size(data)
