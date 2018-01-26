@@ -53,10 +53,9 @@ Any methods available on that are also available on instances of the Coub class.
 Takes a coub URL (or just ID), fetches it and returns a Coub instance.
 Optionally takes a quality argument. Can only be `high` or `med`.
 
-Returns: **Promise<Coub>**
-
 ```js
 const coub = Coub.fetch('http://coub.com/view/w6uc9')
+// => Promise<Coub>
 ```
 
 ---
@@ -69,7 +68,10 @@ If no data is provided the output is cropped as a centered square.
 ```js
 coub.crop() // Crops centered square
 coub.crop('500:200:0:0') // Crop 500x200 with no offset from top right
+// => Coub
 ```
+
+Returns: Coub
 
 ---
 
@@ -81,6 +83,7 @@ Similar to `FfmpegCommand.prototype.size()` but with less strict syntax.
 coub.size(250) // Scale the video to 250 pixel width while preserving aspect ratio
 coub.size('?x100') // Scale the video to 100 pixel height while preserving aspect ratio
 coub.size('250x100') // Scale the video to 250x100
+// => Coub
 ```
 
 ---
