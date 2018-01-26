@@ -18,7 +18,7 @@ $ npm i -g coub-dl
 
 ## Requirements
 
-* FFMPEG (see [FFMPEG instalation](https://github.com/adaptlearning/adapt_authoring/wiki/Installing-FFmpeg))
+* FFmpeg (see [FFmpeg instalation](https://github.com/adaptlearning/adapt_authoring/wiki/Installing-FFmpeg))
 
 ## CLI Usage
 
@@ -54,7 +54,7 @@ Takes a coub URL (or just ID), fetches it and returns a Coub instance.
 Optionally takes a quality argument. Can only be `high` or `med`.
 
 ```js
-const coub = Coub.fetch('http://coub.com/view/w6uc9')
+const coub = await Coub.fetch('http://coub.com/view/w6uc9')
 // => Promise<Coub>
 ```
 
@@ -62,7 +62,7 @@ const coub = Coub.fetch('http://coub.com/view/w6uc9')
 
 ### Coub.prototype.crop([data])
 
-Takes an argument similar to the [FFMPEG crop filter](http://www.bugcodemaster.com/article/crop-video-using-ffmpeg) except it is optional.
+Takes an argument similar to the [FFmpeg crop filter](http://www.bugcodemaster.com/article/crop-video-using-ffmpeg) except it is optional.
 If no data is provided the output is cropped as a centered square.
 
 ```js
