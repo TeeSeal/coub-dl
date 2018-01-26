@@ -1,8 +1,16 @@
 # coub-dl
 
-A Coub downloading CLI.
+A Coub downloader (CLI).
 
 ## Installation
+
+As local package:
+
+```
+$ npm i coub-dl
+```
+
+As CLI:
 
 ```
 $ npm i -g coub-dl
@@ -12,60 +20,75 @@ $ npm i -g coub-dl
 
 * ffmpeg (see [ffmpeg instalation](https://github.com/adaptlearning/adapt_authoring/wiki/Installing-FFmpeg))
 
-## List options
+## CLI Usage
+
+List options and examples
 
 ```
 $ coub-dl --help
 ```
 
-## Usage
-
-Simplest example:
+Examples:
 
 ```
-$ coub-dl -i <LINK|ID> -o out.mp4
+$ coub-dl --input http://coub.com/view/w6uc9 --output out.mp4
+$ coub-dl --input http://coub.com/view/w6uc9 --output out.gif --crop --size 250 --aspect 4:3'
 ```
 
-The output is piped through ffmpeg so you can use multiple formats:
+## Documentation:
 
-```
-$ coub-dl -i <LINK|ID> -o out.gif
-```
+### Coub
 
-### CROP
-
-By default crops a centered square (as big as possible)
-
-```
-$ coub-dl -i <LINK|ID> -o out.mp4 -c
+```js
+const Coub = require('coub-dl')
 ```
 
-Otherwise takes FFMPEG crop filter format
+The Coub class extends the [FfmpegCommand](https://github.com/fluent-ffmpeg/node-fluent-ffmpeg).
+Any methods available on that are also available on instances of the Coub class.
 
-```
-$ coub-dl -i <LINK|ID> -o out.mp4 -c 500:500:0:0
-```
+---
 
-### RESIZE
+### Coub.fetch(url[, quality])
 
-Resize to 250 pixel width preserving aspect ratio:
+Takes a coub URL (or just ID), fetches it and returns a Coub instance.
+Optionally takes a quality argument. Can only be `high` or `med`.
 
-```
-$ coub-dl -i <LINK|ID> -o out.mp4 -s 250
-```
+Returns: **Promise<Coub>**
 
-Resize to 250x100
-
-```
-$ coub-dl -i <LINK|ID> -o out.mp4 -s 250x100
+```js
+const coub = Coub.fetch('http://coub.com/view/w6uc9')
 ```
 
-### ASPECT RATIO
+---
 
-Set the output's aspect ratio:
+### Coub.prototype.crop([data])
 
+Takes an argument similar to the [FFMPEG crop filter](http://www.bugcodemaster.com/article/crop-video-using-ffmpeg) except it is optional.
+If no data is provided the output is cropped as a centered square.
+
+```js
+coub.crop() // Crops centered square
+coub.crop('500:200:0:0') // Crop 500x200 with no offset from top right
 ```
-$ coub-dl -i <LINK|ID> -o out.mp4 -a 4:3
+
+---
+
+### Coub.prototype.size(data)
+
+Similar to `FfmpegCommand.prototype.size()` but with less strict syntax.
+
+```js
+coub.size(250) // Scale the video to 250 pixel width while preserving aspect ratio
+coub.size('?x100') // Scale the video to 100 pixel height while preserving aspect ratio
+coub.size('250x100') // Scale the video to 250x100
+```
+
+---
+
+### Writing the output
+
+```js
+coub.save('my/coub/dir/thing.mp4')
 ```
 
 ## Contributing

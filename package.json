@@ -13,5 +13,8 @@
   },
   "bin": {
     "coub-dl": "bin/coub-dl.js"
+  },
+  "devDependencies": {
+    "eslint": "^4.16.0"
   }
 }
