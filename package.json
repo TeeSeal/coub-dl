@@ -10,13 +10,13 @@
     "start": "node bin/coub-dl",
     "lint": "node_modules/.bin/eslint ."
   },
+  "bin": {
+    "coub-dl": "bin/coub-dl.js"
+  },
   "dependencies": {
     "axios": "^0.17.1",
     "commander": "^2.13.0",
     "fluent-ffmpeg": "^2.1.2"
-  },
-  "bin": {
-    "coub-dl": "bin/coub-dl.js"
   },
   "devDependencies": {
     "eslint": "^4.16.0"
