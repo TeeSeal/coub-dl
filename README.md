@@ -2,11 +2,17 @@
 
 A Coub downloading CLI.
 
+## Installation
+
 ```
 $ npm i -g coub-dl
 ```
 
-In order to see all options use:
+## Requirements
+
+* ffmpeg (see [ffmpeg instalation](https://github.com/adaptlearning/adapt_authoring/wiki/Installing-FFmpeg))
+
+## List options
 
 ```
 $ coub-dl --help
