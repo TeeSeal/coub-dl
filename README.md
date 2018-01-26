@@ -35,7 +35,7 @@ $ coub-dl --input http://coub.com/view/w6uc9 --output out.mp4
 $ coub-dl --input http://coub.com/view/w6uc9 --output out.gif --crop --size 250 --aspect 4:3'
 ```
 
-## Documentation:
+## Documentation
 
 ### Coub
 
