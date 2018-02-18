@@ -58,7 +58,10 @@ class FFmpeg extends EventEmitter {
     const outArg = toStream ? `pipe:${this.inStreams.length}` : this.output
 
     this.applyFilters()
-    const proc = spawn('ffmpeg', this.args.concat([outArg, '-y']))
+    const proc = spawn(
+      'ffmpeg',
+      this.args.concat(['-strict', '-2', outArg, '-y'])
+    )
     for (const stream of this.inStreams) stream.pipe(proc.stdin)
     if (toStream) proc.stdout.pipe(this.output)
 
