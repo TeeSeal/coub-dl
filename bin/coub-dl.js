@@ -14,6 +14,7 @@ const program = require('commander')
   )
   .option('-s, --size <size>', 'Resize the output (widthxheight)')
   .option('-a, --aspect <ratio>', 'Set aspect ratio (w:h)')
+  .option('-A, --no-audio', 'Prevent addition of audio to the output')
 
 program.on('--help', () => {
   const examples = [
@@ -46,6 +47,7 @@ async function run() {
   if (program.crop) coub.crop(program.crop)
   if (program.size) coub.size(program.size)
   if (program.aspect) coub.aspect(program.aspect)
+  if (program.audio) coub.attachAudio()
 
   return coub.save(output)
 }
