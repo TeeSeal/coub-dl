@@ -1,8 +1,8 @@
 const axios = require('axios')
-const Ffmpeg = require('fluent-ffmpeg')
+const FFmpeg = require('./FFmpeg')
 const { PassThrough } = require('stream')
 
-class Coub extends Ffmpeg {
+class Coub extends FFmpeg {
   constructor(videoStream, audio, { width, height }) {
     if (typeof videoStream === 'string') {
       throw new Error('Please use Coub.fetch() to create coubs from URLs.')
@@ -20,40 +20,41 @@ class Coub extends Ffmpeg {
       crop = `${this.height}:${this.height}:${offset}:0`
     }
 
-    this.videoFilter(`crop=${crop}`)
+    this.vf(`crop=${crop}`)
     return this
   }
 
-  size(params) {
-    const [width, height] = params.split(/x|:/)
+  scale(params) {
+    params = params.toString()
+    const separator = params.includes('x') ? 'x' : ':'
+    const [width, height] = params.split(separator)
     this.width = width
     if (height) this.height = height
 
-    super.size(`${width}x${height || '?'}`)
+    this.vf(
+      `scale=${[width, height]
+        .map(num => (isNaN(num) ? '-1' : num))
+        .join(separator)}`
+    )
     return this
   }
 
   attachAudio() {
-    return this
-      .input(this.audio)
-      .addOption('-shortest')
+    return this.in(this.audio).opt('-shortest')
   }
 
   static async fetch(url, quality) {
     if (!['high', 'med'].includes(quality)) quality = 'high'
     const id = url.split('/').slice(-1)[0]
 
-    const { data: metadata } = await axios
-      .get(`http://coub.com/api/v2/coubs/${id}`)
+    const { data: metadata } = await axios.get(
+      `http://coub.com/api/v2/coubs/${id}`
+    )
     if (!metadata) return null
 
     const {
-      video: {
-        [quality]: { url: videoURL }
-      },
-      audio: {
-        [quality]: { url: audioURL }
-      }
+      video: { [quality]: { url: videoURL } },
+      audio: { [quality]: { url: audioURL } }
     } = metadata.file_versions.html5
 
     const [width, height] = metadata.dimensions[
