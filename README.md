@@ -32,7 +32,7 @@ Examples:
 
 ```
 $ coub-dl --input https://coub.com/view/y3dsm --output --no-audio out.mp4
-$ coub-dl --input https://coub.com/view/y3dsm --output out.gif --crop --size 250 --aspect 4:3
+$ coub-dl --input https://coub.com/view/y3dsm --output out.gif --crop --scale 250
 $ coub-dl -i https://coub.com/view/y3dsm -o out.mp4
 ```
 
@@ -43,9 +43,6 @@ $ coub-dl -i https://coub.com/view/y3dsm -o out.mp4
 ```js
 const Coub = require('coub-dl')
 ```
-
-The Coub class extends the [FfmpegCommand](https://github.com/fluent-ffmpeg/node-fluent-ffmpeg).
-Any methods available on that are also available on instances of the Coub class.
 
 ### Coub.fetch(url[, quality])
 
@@ -68,17 +65,16 @@ coub.crop('500:200:0:0') // Crop 500x200 with no offset from top right
 // => Coub
 ```
 
-### Coub.prototype.size(data)
+### Coub.prototype.scale(data)
 
-Similar to `FfmpegCommand.prototype.size()` but with less strict syntax.
+Scale the output video.
 
 ```js
-coub.size(250) // Scale the video to 250 pixel width while preserving aspect ratio
-coub.size('?x100') // Scale the video to 100 pixel height while preserving aspect ratio
-coub.size('250x100') // Scale the video to 250x100
+coub.scale(250) // Scale the video to 250 pixel width while preserving aspect ratio
+coub.scale('-1x100') // Scale the video to 100 pixel height while preserving aspect ratio
+coub.scale('250x100') // Scale the video to 250x100
 // => Coub
 ```
-
 
 ### Coub.prototype.attachAudio()
 
@@ -92,7 +88,7 @@ coub.attachAudio()
 ### Writing the output
 
 ```js
-coub.save('my/coub/dir/thing.mp4')
+coub.write('my/coub/dir/thing.mp4')
 ```
 
 ## Contributing
