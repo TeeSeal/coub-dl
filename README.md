@@ -79,7 +79,7 @@ coub.scale('250:100') // Scale the video to 250x100
 
 ### Coub.prototype.attachAudio()
 
-Attaches the Coub audio to the output. Audio is automatically cropped to the duration of the coub.
+Attaches the Coub audio to the output.
 NOTE: Do this before applying any other filters. Unless you want to apply the filters to the audio.
 
 ```js
