@@ -7,7 +7,6 @@
   "author": "TeeSeal <teesealz@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node bin/coub-dl",
     "lint": "node_modules/.bin/eslint ."
   },
   "bin": {
@@ -15,7 +14,8 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
-    "commander": "^2.13.0"
+    "commander": "^2.13.0",
+    "ffmkek": "^0.0.3"
   },
   "devDependencies": {
     "eslint": "^4.16.0"

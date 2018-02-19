@@ -44,11 +44,14 @@ async function run() {
     )
   }
 
-  if (program.crop) coub.crop(program.crop)
-  if (program.size) coub.size(program.size)
-  if (program.audio) coub.attachAudio()
   if (program.loop) coub.loop(program.loop)
+  if (program.audio) coub.attachAudio()
+  if (program.crop) coub.crop(program.crop)
+  if (program.scale) coub.scale(program.scale)
 
+  coub.on('info', console.log)
+  if (!program.crop && !program.scale) coub.addOption('-c', 'copy')
+  coub.addOption('-shortest')
   return coub.write(output)
 }
 

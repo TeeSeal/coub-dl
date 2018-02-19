@@ -1,9 +1,9 @@
-const FFmpeg = require('./FFmpeg')
+const FFmkek = require('ffmkek')
 const axios = require('axios')
 const fs = require('fs')
 const path = require('path')
 
-class Coub extends FFmpeg {
+class Coub extends FFmkek {
   constructor(video, audio, { width, height }) {
     if (typeof videoStream === 'string') {
       throw new Error('Please use Coub.fetch() to create coubs from URLs.')
@@ -22,7 +22,7 @@ class Coub extends FFmpeg {
       crop = `${this.height}:${this.height}:${offset}:0`
     }
 
-    this.vf(`crop=${crop}`)
+    this.addOption('-vf', `crop=${crop}`)
     return this
   }
 
@@ -33,27 +33,28 @@ class Coub extends FFmpeg {
     this.width = width
     if (height) this.height = height
 
-    this.vf(
-      `scale=${[width, height]
-        .map(num => (isNaN(num) ? '-1' : num))
-        .join(separator)}`
-    )
+    const filterString = [width, height]
+      .map(num => (isNaN(num) ? '-2' : num))
+      .join(separator)
+
+    this.addOption('-vf', `scale=${filterString}`)
     return this
   }
 
   attachAudio() {
-    return this.in(this.audio)
+    return this.addInput(this.audio)
   }
 
   loop(times) {
+    const part = this.parts[0]
     const file = Coub.textToTemp(`file ${this.video}\n`.repeat(times))
-    this.args = ['-f', 'concat', '-safe', '0', '-i', file].concat(this.args.slice(2))
-    return this
-  }
 
-  run() {
-    this.opt('-shortest')
-    return super.run()
+    part
+      .setName(file)
+      .addOption('-f', 'concat')
+      .addOption('-safe', '0')
+
+    return this
   }
 
   static async fetch(url, quality) {
