@@ -322,9 +322,9 @@ fast-levenshtein@~2.0.4:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
 
-ffmkek@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/ffmkek/-/ffmkek-0.0.3.tgz#229021465d8b38e1cb993c8814c108261aa7ad62"
+ffmkek@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/ffmkek/-/ffmkek-0.0.5.tgz#981201ad3a44418ff7c15e9c7f6e9c2b36858d89"
 
 figures@^2.0.0:
   version "2.0.0"

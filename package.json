@@ -15,7 +15,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "commander": "^2.13.0",
-    "ffmkek": "^0.0.3"
+    "ffmkek": "^0.0.5"
   },
   "devDependencies": {
     "eslint": "^4.16.0"
