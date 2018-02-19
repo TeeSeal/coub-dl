@@ -1,14 +1,14 @@
 const axios = require('axios')
 const FFmpeg = require('./FFmpeg')
-const { PassThrough } = require('stream')
 
 class Coub extends FFmpeg {
-  constructor(videoStream, audio, { width, height }) {
+  constructor(video, audio, { width, height }) {
     if (typeof videoStream === 'string') {
       throw new Error('Please use Coub.fetch() to create coubs from URLs.')
     }
 
-    super(videoStream)
+    super(video)
+    this.video = video
     this.audio = audio
     this.width = width
     this.height = height
@@ -61,14 +61,12 @@ class Coub extends FFmpeg {
       quality === 'high' ? 'big' : 'med'
     ]
 
-    const { data: videoBuffer } = await axios.get(videoURL, {
-      responseType: 'arraybuffer'
+    const { data: videoStream } = await axios.get(videoURL, {
+      responseType: 'stream'
     })
-    videoBuffer[0] = videoBuffer[1] = 0
 
-    const videoStream = new PassThrough()
-    videoStream.end(videoBuffer)
-
+    // Decode weird Coub encoding.
+    videoStream.once('data', buffer => (buffer[0] = buffer[1] = 0))
     return new Coub(videoStream, audioURL, { width, height })
   }
 }

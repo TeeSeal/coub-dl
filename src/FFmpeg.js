@@ -1,12 +1,12 @@
 const { EventEmitter } = require('events')
 const { spawn } = require('child_process')
-const stream = require('stream')
+const { Stream, PassThrough }= require('stream')
 
 class FFmpeg extends EventEmitter {
   constructor(source) {
     super()
     this.args = []
-    this.inStreams = []
+    this.inStream = null
     this.output = null
 
     this.videoFilters = []
@@ -28,8 +28,9 @@ class FFmpeg extends EventEmitter {
   in(source) {
     this.applyFilters()
     if (FFmpeg.isReadStream(source)) {
-      this.opt('-i', `pipe:${this.inStreams.length}`)
-      this.inStreams.push(source)
+      if (this.inStream) throw new Error('only one input stream is supported')
+      this.opt('-i', 'pipe:0')
+      this.inStream = source
     } else {
       this.opt('-i', source)
     }
@@ -53,16 +54,13 @@ class FFmpeg extends EventEmitter {
   }
 
   run() {
-    if (!this.output) this.output = new stream.PassThrough()
+    if (!this.output) this.output = new PassThrough()
     const toStream = !(typeof this.output === 'string')
-    const outArg = toStream ? `pipe:${this.inStreams.length}` : this.output
+    const outArg = toStream ? 'pipe:1' : this.output
 
     this.applyFilters()
-    const proc = spawn(
-      'ffmpeg',
-      this.args.concat(['-strict', '-2', outArg, '-y'])
-    )
-    for (const stream of this.inStreams) stream.pipe(proc.stdin)
+    const proc = spawn('ffmpeg', this.args.concat([outArg, '-y']))
+    if (this.inStream) this.inStream.pipe(proc.stdin)
     if (toStream) proc.stdout.pipe(this.output)
 
     proc.stderr.on('data', data => this.emit('info', data.toString()))
@@ -79,7 +77,7 @@ class FFmpeg extends EventEmitter {
 
   static isReadStream(obj) {
     return (
-      obj instanceof stream.Stream &&
+      obj instanceof Stream &&
       typeof obj._read === 'function' &&
       typeof obj._readableState === 'object'
     )
