@@ -15,6 +15,7 @@ const program = require('commander')
   .option('-s, --scale <size>', 'Resize the output (widthxheight)')
   .option('-A, --no-audio', 'Prevent addition of audio to the output')
   .option('-l, --loop <times>', 'Loop the coub X times')
+  .option('-t, --track', 'Use in order to view the logs from ffmpeg while it works.')
 
 program.on('--help', () => {
   const examples = [
@@ -48,10 +49,10 @@ async function run() {
   if (program.audio) coub.attachAudio()
   if (program.crop) coub.crop(program.crop)
   if (program.scale) coub.scale(program.scale)
-
-  coub.on('info', console.log)
+  if (program.track) coub.on('info', console.log)
   if (!program.crop && !program.scale) coub.addOption('-c', 'copy')
   coub.addOption('-shortest')
+
   return coub.write(output)
 }
 

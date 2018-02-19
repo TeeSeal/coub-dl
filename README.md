@@ -31,9 +31,9 @@ $ coub-dl --help
 Examples:
 
 ```
-$ coub-dl --input https://coub.com/view/y3dsm --output --no-audio out.mp4
-$ coub-dl --input https://coub.com/view/y3dsm --output out.gif --crop --scale 250
-$ coub-dl -i https://coub.com/view/y3dsm -o out.mp4
+$ coub-dl --input https://coub.com/view/135nqc --output --no-audio out.mp4
+$ coub-dl --input https://coub.com/view/135nqc --output out.gif --crop --scale 250
+$ coub-dl -i https://coub.com/view/135nqc -o out.mp4
 ```
 
 ## Documentation
