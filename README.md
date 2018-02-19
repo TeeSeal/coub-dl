@@ -40,6 +40,7 @@ $ coub-dl -i https://coub.com/view/y3dsm -o out.mp4
 
 ### Coub
 
+Extends [FFmkek](https://github.com/TeeSeal/ffmkek).
 ```js
 const Coub = require('coub-dl')
 ```
@@ -71,14 +72,15 @@ Scale the output video.
 
 ```js
 coub.scale(250) // Scale the video to 250 pixel width while preserving aspect ratio
-coub.scale('-1x100') // Scale the video to 100 pixel height while preserving aspect ratio
-coub.scale('250x100') // Scale the video to 250x100
+coub.scale('-2:100') // Scale the video to 100 pixel height while preserving aspect ratio
+coub.scale('250:100') // Scale the video to 250x100
 // => Coub
 ```
 
 ### Coub.prototype.attachAudio()
 
 Attaches the Coub audio to the output. Audio is automatically cropped to the duration of the coub.
+NOTE: Do this before applying any other filters. Unless you want to apply the filters to the audio.
 
 ```js
 coub.attachAudio()
