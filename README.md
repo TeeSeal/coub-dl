@@ -85,6 +85,15 @@ coub.attachAudio()
 // => Coub
 ```
 
+### Coub.prototype.loop()
+
+Loop the video a given amount of times. If the video ends up longer than the audio, it is shortened to the length of the audio.
+
+```js
+coub.loop(3)
+// => Coub
+```
+
 ### Writing the output
 
 ```js

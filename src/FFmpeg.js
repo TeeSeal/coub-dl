@@ -59,7 +59,6 @@ class FFmpeg extends EventEmitter {
     const outArg = toStream ? 'pipe:1' : this.output
 
     this.applyFilters()
-    console.log(this.args.concat(['-c', 'copy', outArg, '-y']))
     const proc = spawn(
       'ffmpeg',
       this.args.concat(['-c', 'copy', outArg, '-y'])
