@@ -67,10 +67,10 @@ class Coub extends FFmkek {
     )
     if (!metadata) return null
 
-    const {
-      video: { [quality]: { url: videoURL } },
-      audio: { [quality]: { url: audioURL } }
-    } = metadata.file_versions.html5
+    const { video: videoURLs, audio: audioURLs } = metadata.file_versions.html5
+    const [videoURL, audioURL] = [videoURLs, audioURLs].map(
+      obj => (obj[quality] || obj.med).url
+    )
 
     const [width, height] = metadata.dimensions[
       quality === 'high' ? 'big' : 'med'
