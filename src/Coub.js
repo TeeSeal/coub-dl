@@ -4,7 +4,7 @@ const fs = require('fs')
 const path = require('path')
 
 class Coub extends FFmkek {
-  constructor(video, audio, { width, height }) {
+  constructor(video, audio, { width, height, duration }) {
     if (typeof videoStream === 'string') {
       throw new Error('Please use Coub.fetch() to create coubs from URLs.')
     }
@@ -14,6 +14,7 @@ class Coub extends FFmkek {
     this.audio = audio
     this.width = width
     this.height = height
+    this.duration = duration
   }
 
   crop(crop) {
@@ -82,7 +83,11 @@ class Coub extends FFmkek {
     // Decode weird Coub encoding.
     videoStream.once('data', buffer => (buffer[0] = buffer[1] = 0))
     const videoPath = await Coub.streamToTemp(videoStream)
-    return new Coub(videoPath, audioURL, { width, height })
+    return new Coub(videoPath, audioURL, {
+      width,
+      height,
+      duration: metadata.duration
+    })
   }
 
   static streamToTemp(readStream) {
