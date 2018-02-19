@@ -59,3 +59,7 @@ typings/
 
 # Misc
 .DS_Store
+
+# Temp files
+temp.mp4
+temp.txt

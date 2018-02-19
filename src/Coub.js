@@ -1,5 +1,6 @@
-const axios = require('axios')
 const FFmpeg = require('./FFmpeg')
+const axios = require('axios')
+const fs = require('fs')
 
 class Coub extends FFmpeg {
   constructor(video, audio, { width, height }) {
@@ -40,7 +41,18 @@ class Coub extends FFmpeg {
   }
 
   attachAudio() {
-    return this.in(this.audio).opt('-shortest')
+    return this.in(this.audio)
+  }
+
+  loop(times) {
+    const file = Coub.textToTemp(`file ${this.video}\n`.repeat(times))
+    this.args = ['-f', 'concat', '-i', file].concat(this.args.slice(2))
+    return this
+  }
+
+  run() {
+    this.opt('-shortest')
+    return super.run()
   }
 
   static async fetch(url, quality) {
@@ -67,7 +79,22 @@ class Coub extends FFmpeg {
 
     // Decode weird Coub encoding.
     videoStream.once('data', buffer => (buffer[0] = buffer[1] = 0))
-    return new Coub(videoStream, audioURL, { width, height })
+    const videoPath = await Coub.streamToTemp(videoStream)
+    return new Coub(videoPath, audioURL, { width, height })
+  }
+
+  static streamToTemp(readStream) {
+    const writeStream = fs.createWriteStream('temp.mp4')
+    readStream.pipe(writeStream)
+
+    return new Promise(resolve => {
+      writeStream.once('finish', () => resolve('temp.mp4'))
+    })
+  }
+
+  static textToTemp(text) {
+    fs.writeFileSync('temp.txt', text)
+    return 'temp.txt'
   }
 }
 
