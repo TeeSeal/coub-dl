@@ -1,6 +1,7 @@
 const FFmpeg = require('./FFmpeg')
 const axios = require('axios')
 const fs = require('fs')
+const path = require('path')
 
 class Coub extends FFmpeg {
   constructor(video, audio, { width, height }) {
@@ -46,7 +47,7 @@ class Coub extends FFmpeg {
 
   loop(times) {
     const file = Coub.textToTemp(`file ${this.video}\n`.repeat(times))
-    this.args = ['-f', 'concat', '-i', file].concat(this.args.slice(2))
+    this.args = ['-f', 'concat', '-safe', '0', '-i', file].concat(this.args.slice(2))
     return this
   }
 
@@ -84,17 +85,19 @@ class Coub extends FFmpeg {
   }
 
   static streamToTemp(readStream) {
-    const writeStream = fs.createWriteStream('temp.mp4')
+    const filePath = path.join(__dirname, '../temp.mp4')
+    const writeStream = fs.createWriteStream(filePath)
     readStream.pipe(writeStream)
 
     return new Promise(resolve => {
-      writeStream.once('finish', () => resolve('temp.mp4'))
+      writeStream.once('finish', () => resolve(filePath))
     })
   }
 
   static textToTemp(text) {
-    fs.writeFileSync('temp.txt', text)
-    return 'temp.txt'
+    const filePath = path.join(__dirname, '../temp.txt')
+    fs.writeFileSync(filePath, text)
+    return filePath
   }
 }
 
