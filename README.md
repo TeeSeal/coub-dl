@@ -38,7 +38,7 @@ Available options:
 -A, --no-audio         prevent addition of audio to the output
 -l, --loop <times>     loop the coub X times
 -t, --time <amount>    set the maximal amount of seconds for the length of the output
--i, --info             use in order to view the logs from ffmpeg while it works
+-d, --details          use in order to view the logs from ffmpeg while it works
 -h, --help             output usage information
 ```
 

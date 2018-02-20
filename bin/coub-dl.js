@@ -20,7 +20,7 @@ const program = require('commander')
     'set the maximal amount of seconds for the length of the output'
   )
   .option(
-    '-i, --info',
+    '-d, --details',
     'use in order to view the logs from ffmpeg while it works'
   )
 
@@ -59,7 +59,7 @@ async function run() {
   if (program.crop) coub.crop(program.crop)
   if (program.scale) coub.scale(program.scale)
   if (program.time) coub.addOption('-t', program.time)
-  if (program.info) coub.on('info', console.log)
+  if (program.details) coub.on('info', console.log)
   if (!program.crop && !program.scale) coub.addOption('-c', 'copy')
   coub.addOption('-shortest')
 
