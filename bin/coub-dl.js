@@ -27,8 +27,10 @@ const program = require('commander')
 program.on('--help', () => {
   const examples = [
     '\n  Examples:\n',
-    '    coub-dl -i http://coub.com/view/w6uc9 -o out.mp4',
-    '    coub-dl -i http://coub.com/view/w6uc9 -o out.gif -c -s 250'
+    '    coub-dl --input https://coub.com/view/135nqc --no-audio --output out.mp4',
+    '    coub-dl -i https://coub.com/view/135nqc -o out.gif --crop --scale 250',
+    '    coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 3',
+    '    coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 10 --time 12'
   ].join('\n')
 
   console.log(examples)
