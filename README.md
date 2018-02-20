@@ -31,14 +31,14 @@ $ coub-dl --help
 Available options:
 ```
 -V, --version          output the version number
--i, --input <input>    Input (coub link or id)
--o, --output <output>  Output file location
--c, --crop [crop]      Crop the output (width:height:x_offset:y_offset)
--s, --scale <size>     Resize the output (widthxheight)
--A, --no-audio         Prevent addition of audio to the output
--l, --loop <times>     Loop the coub X times
--t, --time <amount>    Set the maximal amount of seconds for the length of the output.
--i, --info             Use in order to view the logs from ffmpeg while it works.
+-i, --input <input>    input (coub link or id)
+-o, --output <output>  output file location
+-c, --crop [crop]      crop the output (width:height:x_offset:y_offset)
+-s, --scale <size>     resize the output (widthxheight)
+-A, --no-audio         prevent addition of audio to the output
+-l, --loop <times>     loop the coub X times
+-t, --time <amount>    set the maximal amount of seconds for the length of the output
+-i, --info             use in order to view the logs from ffmpeg while it works
 -h, --help             output usage information
 ```
 
@@ -46,7 +46,7 @@ Examples:
 
 ```sh
 # Download coub without audio
-$ coub-dl --input https://coub.com/view/135nqc --no-audio --output out.mp4
+$ coub-dl --input https://coub.com/view/135nqc --output out.mp4 --no-audio
 # Download coub as gif, crop it as a square and scale it down to 250x250
 $ coub-dl -i https://coub.com/view/135nqc -o out.gif --crop --scale 250
 # Download coub and loop it 3 times

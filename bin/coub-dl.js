@@ -6,22 +6,22 @@ const { version } = require('../package')
 // CLI Setup
 const program = require('commander')
   .version(version)
-  .option('-i, --input <input>', 'Input (coub link or id).')
-  .option('-o, --output <output>', 'Output file location.')
+  .option('-i, --input <input>', 'input (coub link or id)')
+  .option('-o, --output <output>', 'output file location')
   .option(
     '-c, --crop [crop]',
-    'Crop the output (width:height:x_offset:y_offset).'
+    'crop the output (width:height:x_offset:y_offset)'
   )
-  .option('-s, --scale <size>', 'Resize the output (widthxheight).')
-  .option('-A, --no-audio', 'Prevent addition of audio to the output.')
-  .option('-l, --loop <times>', 'Loop the coub X times,')
+  .option('-s, --scale <size>', 'resize the output (widthxheight)')
+  .option('-A, --no-audio', 'prevent addition of audio to the output')
+  .option('-l, --loop <times>', 'loop the coub X times')
   .option(
     '-t, --time <amount>',
-    'Set the maximal amount of seconds for the length of the output.'
+    'set the maximal amount of seconds for the length of the output'
   )
   .option(
     '-i, --info',
-    'Use in order to view the logs from ffmpeg while it works.'
+    'use in order to view the logs from ffmpeg while it works'
   )
 
 program.on('--help', () => {
