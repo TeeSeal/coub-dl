@@ -98,8 +98,14 @@ coub.loop(3)
 
 ### Writing the output
 
+The `write()` method is inherited from [FFmkek](https://github.com/TeeSeal/ffmkek).
+
 ```js
 coub.write('my/coub/dir/thing.mp4')
+// => Promise<string>
+
+coub.write()
+// => Promise<Stream>
 ```
 
 ## Contributing
