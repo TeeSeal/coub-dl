@@ -5,10 +5,6 @@ const path = require('path')
 
 class Coub extends FFmkek {
   constructor(video, audio, { width, height, duration }) {
-    if (typeof video === 'string') {
-      throw new Error('Please use Coub.fetch() to create coubs from URLs.')
-    }
-
     super(video)
     this.video = video
     this.audio = audio
