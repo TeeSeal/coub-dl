@@ -110,8 +110,6 @@ coub.attachAudio()
 
 Loop the video a given amount of times. If the video ends up longer than the audio, it is shortened to the length of the audio.
 
-**Note**: Using this method will cause the creation of temporary files. This is needed in order to comply with ffmpeg's concat demuxer. The temporary files are placed in the `temp` directory at the root of this package and are removed immediately after the process finishes working with them.
-
 ```js
 coub.loop(3)
 // => Coub
