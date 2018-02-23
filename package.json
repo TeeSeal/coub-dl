@@ -13,9 +13,9 @@
     "coub-dl": "bin/coub-dl.js"
   },
   "dependencies": {
-    "axios": "^0.17.1",
+    "axios": "^0.18.0",
     "commander": "^2.13.0",
-    "ffmkek": "^0.0.5"
+    "ffmkek": "^0.0.7"
   },
   "devDependencies": {
     "eslint": "^4.16.0"

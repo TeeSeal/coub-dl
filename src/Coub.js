@@ -1,7 +1,7 @@
 const FFmkek = require('ffmkek')
 const axios = require('axios')
-const fs = require('fs')
-const path = require('path')
+const TempFile = require('./TempFile')
+const { Stream } = require('stream')
 
 class Coub extends FFmkek {
   constructor(video, audio, { width, height, duration }) {
@@ -11,6 +11,8 @@ class Coub extends FFmkek {
     this.width = width
     this.height = height
     this.duration = duration
+
+    this.tempFiles = []
   }
 
   crop(crop) {
@@ -42,16 +44,25 @@ class Coub extends FFmkek {
     return this.addInput(this.audio)
   }
 
-  loop(times) {
-    const part = this.parts[0]
-    const file = Coub.textToTemp(`file ${this.video}\n`.repeat(times))
+  async loop(times) {
+    if (times < 2) return
+    const videoFile = this.video instanceof Stream
+      ? await new TempFile(this.video, 'mp4').write()
+      : this.video
 
-    part
-      .setName(file)
+    const list = await new TempFile(`file ${videoFile}\n`.repeat(times), 'txt').write()
+    this.parts[0].remove()
+    this.tempFiles.push(list, videoFile)
+    return this
       .addOption('-f', 'concat')
       .addOption('-safe', '0')
+      .addInput(list.path)
+  }
 
-    return this
+  async run() {
+    const result = await super.run()
+    this.tempFiles.forEach(file => file.delete())
+    return result
   }
 
   static async fetch(url, quality) {
@@ -78,28 +89,11 @@ class Coub extends FFmkek {
 
     // Decode weird Coub encoding.
     videoStream.once('data', buffer => (buffer[0] = buffer[1] = 0))
-    const videoPath = await Coub.streamToTemp(videoStream)
-    return new Coub(videoPath, audioURL, {
+    return new Coub(videoStream, audioURL, {
       width,
       height,
       duration: metadata.duration
     })
-  }
-
-  static streamToTemp(readStream) {
-    const filePath = path.join(__dirname, '../temp.mp4')
-    const writeStream = fs.createWriteStream(filePath)
-    readStream.pipe(writeStream)
-
-    return new Promise(resolve => {
-      writeStream.once('finish', () => resolve(filePath))
-    })
-  }
-
-  static textToTemp(text) {
-    const filePath = path.join(__dirname, '../temp.txt')
-    fs.writeFileSync(filePath, text)
-    return filePath
   }
 }
 
