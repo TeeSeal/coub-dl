@@ -43,7 +43,7 @@ class Coub extends FFmkek {
     return this.addInput(this.audio)
   }
 
-  async loop(times) {
+  loop(times) {
     if (times < 2) return
 
     const list = new TempFile(`file ${this.video}\n`.repeat(times), 'txt').writeSync()
