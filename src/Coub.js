@@ -44,7 +44,7 @@ class Coub extends FFmkek {
   }
 
   loop(times) {
-    if (times < 2) return
+    if (times < 2) return this
 
     const list = new TempFile(`file ${this.video}\n`.repeat(times), 'txt').writeSync()
     this.tempFiles.push(list)
