@@ -54,7 +54,7 @@ async function run() {
     )
   }
 
-  if (program.loop) await coub.loop(program.loop)
+  if (program.loop) coub.loop(program.loop)
   if (program.audio) coub.attachAudio()
   if (program.crop) coub.crop(program.crop)
   if (program.scale) coub.scale(program.scale)

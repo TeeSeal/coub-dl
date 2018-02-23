@@ -19,6 +19,11 @@ class TempFile {
       : this._writeFile()
   }
 
+  writeSync() {
+    fs.writeFileSync(this.path, this.content)
+    return this
+  }
+
   delete() {
     return new Promise((resolve, reject) => {
       fs.unlink(this.path, err => {

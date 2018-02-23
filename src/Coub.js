@@ -1,10 +1,9 @@
 const FFmkek = require('ffmkek')
 const axios = require('axios')
 const TempFile = require('./TempFile')
-const { Stream } = require('stream')
 
 class Coub extends FFmkek {
-  constructor(video, audio, { width, height, duration }) {
+  constructor(video, audio, { width, height, duration, tempFiles }) {
     super(video)
     this.video = video
     this.audio = audio
@@ -12,7 +11,7 @@ class Coub extends FFmkek {
     this.height = height
     this.duration = duration
 
-    this.tempFiles = []
+    this.tempFiles = tempFiles || []
   }
 
   crop(crop) {
@@ -46,13 +45,11 @@ class Coub extends FFmkek {
 
   async loop(times) {
     if (times < 2) return
-    const videoFile = this.video instanceof Stream
-      ? await new TempFile(this.video, 'mp4').write()
-      : this.video
 
-    const list = await new TempFile(`file ${videoFile}\n`.repeat(times), 'txt').write()
+    const list = new TempFile(`file ${this.video}\n`.repeat(times), 'txt').writeSync()
+    this.tempFiles.push(list)
     this.parts[0].remove()
-    this.tempFiles.push(list, videoFile)
+
     return this
       .addOption('-f', 'concat')
       .addOption('-safe', '0')
@@ -89,10 +86,13 @@ class Coub extends FFmkek {
 
     // Decode weird Coub encoding.
     videoStream.once('data', buffer => (buffer[0] = buffer[1] = 0))
-    return new Coub(videoStream, audioURL, {
+    const video = await new TempFile(videoStream, 'mp4').write()
+
+    return new Coub(video.path, audioURL, {
       width,
       height,
-      duration: metadata.duration
+      duration: metadata.duration,
+      tempFiles: [video]
     })
   }
 }
