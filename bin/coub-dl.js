@@ -23,6 +23,10 @@ const program = require('commander')
     '-d, --details',
     'use in order to view the logs from ffmpeg while it works'
   )
+  .option(
+    '-C, --copy-codec',
+    'copy the codecs from the input. Improves speed but might cause issues with sound in some players'
+  )
 
 program.on('--help', () => {
   const examples = [
@@ -60,7 +64,7 @@ async function run() {
   if (program.scale) coub.scale(program.scale)
   if (program.time) coub.addOption('-t', program.time)
   if (program.details) coub.on('info', console.log)
-  if (!program.crop && !program.scale) coub.addOption('-c', 'copy')
+  if (!program.crop && !program.scale && program.copyCodec) coub.addOption('-c', 'copy')
   coub.addOption('-shortest')
 
   return coub.write(output)
