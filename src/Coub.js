@@ -1,6 +1,7 @@
 const FFmkek = require('ffmkek')
 const axios = require('axios')
 const TempFile = require('./TempFile')
+const { sep } = require('path')
 
 class Coub extends FFmkek {
   constructor(video, audio, { width, height, duration, tempFiles }) {
@@ -46,7 +47,8 @@ class Coub extends FFmkek {
   loop(times) {
     if (times < 2) return this
 
-    const list = new TempFile(`file ${this.video}\n`.repeat(times), 'txt').writeSync()
+    const path = this.video.split(sep).join('/').replace(' ', '\\ ')
+    const list = new TempFile(`file ${path}\n`.repeat(times), 'txt').writeSync()
     this.tempFiles.push(list)
     this.parts[0].remove()
 
