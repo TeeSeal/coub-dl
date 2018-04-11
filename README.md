@@ -61,13 +61,13 @@ Examples:
 
 ```sh
 # Download coub without audio
-$ coub-dl --input https://coub.com/view/135nqc --output out.mp4 --no-audio
+$ coub-dl --input https://coub.com/view/135nqc --output out.mp4 --no-audio -C
 # Download coub as gif, crop it as a square and scale it down to 250x250
 $ coub-dl -i https://coub.com/view/135nqc -o out.gif --crop --scale 250
 # Download coub and loop it 3 times
-$ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 3
+$ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 3 -C
 # Download coub and make sure it's no longer than 12 seconds
-$ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 10 --time 12
+$ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 10 --time 12 -C
 ```
 
 ## Documentation
@@ -122,7 +122,7 @@ coub.attachAudio()
 // => Coub
 ```
 
-### Coub.prototype.loop()
+### Coub.prototype.loop(times)
 
 Loop the video a given amount of times. If the video ends up longer than the audio, it is shortened to the length of the audio.
 
@@ -142,8 +142,3 @@ coub.write('my/coub/dir/thing.mp4')
 coub.write()
 // => Promise<Stream>
 ```
-
-## Contributing
-
-This is a very early build.
-If you have any suggestions feel free to file an issue, or if you've already implemented changes PR's are also welcome.
