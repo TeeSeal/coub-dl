@@ -4,13 +4,14 @@ const TempFile = require('./TempFile')
 const { sep } = require('path')
 
 class Coub extends FFmkek {
-  constructor(video, audio, { width, height, duration, tempFiles }) {
+  constructor(video, audio, { width, height, metadata, tempFiles }) {
     super(video)
     this.video = video
     this.audio = audio
     this.width = width
     this.height = height
-    this.duration = duration
+    this.metadata = metadata
+    this.duration = metadata.duration
 
     this.tempFiles = tempFiles || []
   }
@@ -93,7 +94,7 @@ class Coub extends FFmkek {
     return new Coub(video.path, audioURL, {
       width,
       height,
-      duration: metadata.duration,
+      metadata,
       tempFiles: [video]
     })
   }
