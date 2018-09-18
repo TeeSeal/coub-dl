@@ -68,24 +68,37 @@ class Coub extends FFmkek {
   static async fetch(url, quality) {
     if (!['high', 'med'].includes(quality)) quality = 'high'
     const id = url.split('/').slice(-1)[0]
+    
+    try {
+      var { data: metadata } = await axios.get(
+        `http://coub.com/api/v2/coubs/${id}`
+      )
+    } catch (error) {
+      return null
+    }
 
-    const { data: metadata } = await axios.get(
-      `http://coub.com/api/v2/coubs/${id}`
-    )
     if (!metadata) return null
 
     const { video: videoURLs, audio: audioURLs } = metadata.file_versions.html5
-    const [videoURL, audioURL] = [videoURLs, audioURLs].map(
-      obj => (obj[quality] || obj.med).url
-    )
+    try {
+      var [videoURL, audioURL] = [videoURLs, audioURLs].map(
+        obj => (obj[quality] || obj.med).url
+      )
+    } catch () {
+      return null
+    }
 
     const [width, height] = metadata.dimensions[
       quality === 'high' ? 'big' : 'med'
     ]
 
-    const { data: videoStream } = await axios.get(videoURL, {
-      responseType: 'stream'
-    })
+    try {
+      var { data: videoStream } = await axios.get(videoURL, {
+        responseType: 'stream'
+      })
+    } catch (error) {
+      return null
+    }
 
     // Decode weird Coub encoding.
     videoStream.once('data', buffer => (buffer[0] = buffer[1] = 0))
