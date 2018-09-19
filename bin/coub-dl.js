@@ -2,6 +2,7 @@
 
 const Coub = require('../')
 const { version } = require('../package')
+const { resolvePath } = require('../src/Util')
 
 // CLI Setup
 const program = require('commander')
@@ -27,6 +28,7 @@ const program = require('commander')
     '-C, --copy-codec',
     'copy the codecs from the input. Improves speed but might cause issues with sound in some players'
   )
+  .option('-f, --format <format>', 'output file format (mp4, gif etc.)')
 
 program.on('--help', () => {
   const examples = [
@@ -44,11 +46,9 @@ program.parse(process.argv)
 
 // Main
 async function run() {
-  const { input, output } = program
-  if (!input || !output) {
-    return console.log(
-      'Please specify both input and output. Use --help to see the list of options.'
-    )
+  const { input, output, loop, audio, crop, scale, time, details, copyCodec, format } = program
+  if (!input) {
+    return console.log('Please specify input. Use --help to see the list of options.')
   }
 
   const coub = await Coub.fetch(input).catch(() => null)
@@ -58,16 +58,17 @@ async function run() {
     )
   }
 
-  if (program.loop) coub.loop(program.loop)
-  if (program.audio) coub.attachAudio()
-  if (program.crop) coub.crop(program.crop)
-  if (program.scale) coub.scale(program.scale)
-  if (program.time) coub.addOption('-t', program.time)
-  if (program.details) coub.on('info', console.log)
-  if (!program.crop && !program.scale && program.copyCodec) coub.addOption('-c', 'copy')
+  if (loop) coub.loop(loop)
+  if (audio) coub.attachAudio()
+  if (crop) coub.crop(crop)
+  if (scale) coub.scale(scale)
+  if (time) coub.addOption('-t', time)
+  if (details) coub.on('info', console.log)
+  if (!crop && !scale && copyCodec) coub.addOption('-c', 'copy')
   coub.addOption('-shortest')
 
-  return coub.write(output)
+  const path = resolvePath(output, coub.metadata.title, format)
+  return coub.write(path)
 }
 
 run()
