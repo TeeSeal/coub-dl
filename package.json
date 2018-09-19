@@ -10,7 +10,8 @@
     "lint": "node_modules/.bin/eslint ."
   },
   "bin": {
-    "coub-dl": "bin/coub-dl.js"
+    "coub-dl": "bin/coub-dl.js",
+    "coub-dl-mp3": "bin/coub-dl-mp3.js"
   },
   "dependencies": {
     "axios": "^0.18.0",
