@@ -15,7 +15,7 @@ program.on('--help', () => {
   const examples = [
     '\n  Examples:\n',
     '    coub-dl-mp3 --input https://coub.com/view/135nqc --output out.mp3',
-    '    coub-dl -i https://coub.com/view/135nqc',
+    '    coub-dl-mp3 -i https://coub.com/view/135nqc',
   ].join('\n')
 
   console.log(examples)
