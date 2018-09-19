@@ -42,6 +42,7 @@ Available options:
 -d, --details          use in order to view the logs from ffmpeg while it works
 -C, --copy-codec       copy the codecs from the input. Improves speed but might cause issues with sound in some players
 -h, --help             output usage information
+-f, --format           output file format (mp4, gif etc.)
 ```
 
 **NOTE:** About the `-C` option. Originally codecs were copied by default as it improved the speed of the process, but it was reported
@@ -68,6 +69,45 @@ $ coub-dl -i https://coub.com/view/135nqc -o out.gif --crop --scale 250
 $ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 3 -C
 # Download coub and make sure it's no longer than 12 seconds
 $ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 10 --time 12 -C
+```
+
+### Resolving the output file path
+
+coub-dl will try to resolve the output file path automatically if you don't specify it.
+By default, the coub title will be used as the file name. Here are some examples.
+
+The coub title is `Dance`.
+Let the current directory be `/home/coubs`.
+
+```sh
+$ coub-dl -i https://coub.com/view/135nqc
+# produces /home/coubs/Dance.mp4
+
+$ coub-dl -i https://coub.com/view/135nqc --format gif
+# produces /home/coubs/Dance.gif
+```
+
+If you do want to use a custom path but also include the coub title, you can use the `:name:` special
+pattern in the path which will be replaced with the coub title.
+
+```sh
+$ coub-dl -i https://coub.com/view/135nqc -o /my/custom/directory/:name:.gif
+# produces /my/custom/directory/Dance.gif
+```
+
+You may also omit the file extension, which will default to `mp4`.
+
+```sh
+$ coub-dl -i https://coub.com/view/135nqc -o /my/custom/directory/:name:
+# produces /my/custom/directory/Dance.mp4
+```
+
+**NOTE:** If you do specify a file extension in the path, the `--format` option will be ignored.
+For example:
+
+```sh
+$ coub-dl -i https://coub.com/view/135nqc -o /my/custom/directory/:name:.mp4 -f gif
+# produces /my/custom/directory/Dance.mp4
 ```
 
 ## Documentation
