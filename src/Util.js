@@ -7,7 +7,7 @@ class Util {
 
   static resolvePath(path = '', name, ext = 'mp4') {
     if (!path) path = name
-    path = path.replace(/<name>/g, name)
+    path = path.replace(/:name:/g, name)
     if (!extname(path)) path += `.${ext}`
     return path
   }
