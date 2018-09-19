@@ -20,7 +20,7 @@ $ npm i -g coub-dl
 
 * FFmpeg (see [FFmpeg instalation](https://github.com/adaptlearning/adapt_authoring/wiki/Installing-FFmpeg))
 
-## CLI Usage
+## CLI Usage (Video)
 
 List options and examples
 
@@ -109,6 +109,34 @@ For example:
 $ coub-dl -i https://coub.com/view/135nqc -o /my/custom/directory/:name:.mp4 -f gif
 # produces /my/custom/directory/Dance.mp4
 ```
+
+## CLI Usage (Audio)
+
+This is an utility that lets you download the audio from coubs separately.
+
+List options and examples:
+
+```sh
+$ coub-dl-mp3 --help
+```
+
+Available options:
+
+```
+-V, --version          output the version number
+-i, --input <input>    input (coub link or id)
+-o, --output <output>  output file location
+-h, --help             output usage information
+```
+
+Examples:
+
+```sh
+$ coub-dl-mp3 -i https://coub.com/view/135nqc -o out.mp3
+$ coub-dl-mp3 -i https://coub.com/view/135nqc
+```
+
+The output file path resolves the same way as with the video CLI, except the format defaults to `mp3`.
 
 ## Documentation
 
