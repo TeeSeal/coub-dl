@@ -71,6 +71,21 @@ $ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 3 -C
 $ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 10 --time 12 -C
 ```
 
+### Downloading coub for full length of audio
+
+There is currently no explicit way of achieving this but you can do it through a sort of a "hack":
+
+```sh
+$ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 999
+```
+
+While looping the coub 999 times might sound scary, the script actually checks which part of the media
+(the audio or the video) is shorter, and crops it down to the shorter one. So if the video is
+a couple hours long and the audio is only 3 minutes long, the resulting file will be cropped down to 3 minutes.
+
+It also works the other way around. If the audio is 3 minutes and the video is 15 seconds, the output is cropped
+to 15 seconds.
+
 ### Resolving the output file path
 
 coub-dl will try to resolve the output file path automatically if you don't specify it.
