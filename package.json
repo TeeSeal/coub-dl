@@ -14,11 +14,11 @@
     "coub-dl-mp3": "bin/coub-dl-mp3.js"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "commander": "^2.13.0",
-    "ffmkek": "^0.0.7"
+    "axios": "^0.19.0",
+    "commander": "^2.20.0",
+    "ffmkek": "^0.0.8"
   },
   "devDependencies": {
-    "eslint": "^4.16.0"
+    "eslint": "^6.0.1"
   }
 }
