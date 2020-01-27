@@ -1,6 +1,6 @@
 {
   "name": "coub-dl",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "A coub downloader.",
   "main": "index.js",
   "repository": "git@github.com:TeeSeal/coub-dl.git",
