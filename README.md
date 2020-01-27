@@ -40,23 +40,9 @@ Available options:
 -l, --loop <times>     loop the coub X times
 -t, --time <amount>    set the maximal amount of seconds for the length of the output
 -d, --details          use in order to view the logs from ffmpeg while it works
--C, --copy-codec       copy the codecs from the input. Improves speed but might cause issues with sound in some players
 -h, --help             output usage information
 -f, --format           output file format (mp4, gif etc.)
 ```
-
-**NOTE:** About the `-C` option. Originally codecs were copied by default as it improved the speed of the process, but it was reported
-that some players fail to detect the sound of the output file when doing so, as such, the codec copying is now an option.
-
-* If you DO use the `-C` option:
-  some players will have issues with the sound of the output BUT the process will be faster!
-  Use this if you don't really care about sound, or your player (or whatever else uses your output) supports the codecs for sound.
-
-* If you DON'T use the `-C` option:
-  all players will be able to play your file just fine, but the process will take longer as ffmpeg will have to decode and reencode your file.
-
-The `--copy-codec` option will only work if you don't use any other video filters such as `crop` and `scale`.
-If you do, adding this option will have no effect. (FFmpeg will still have to decode and encode the video)
 
 Examples:
 
