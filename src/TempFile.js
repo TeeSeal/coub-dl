@@ -1,16 +1,11 @@
+const temp = require('tempy')
 const fs = require('fs')
-const path = require('path')
 const { Stream } = require('stream')
-
-const TEMP_DIR_PATH = path.join(__dirname, '..', 'temp')
-const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
 class TempFile {
   constructor(content, extension) {
     this.content = content
-    this.path = TempFile.generatePath(extension)
-
-    if (!fs.existsSync(TEMP_DIR_PATH)) fs.mkdirSync(TEMP_DIR_PATH)
+    this.path = temp.file({ extension })
   }
 
   write() {
@@ -54,18 +49,6 @@ class TempFile {
         return resolve(this)
       })
     })
-  }
-
-  static generatePath(ext) {
-    const file = path.join(TEMP_DIR_PATH, `${TempFile.generateId()}.${ext}`)
-    if (fs.existsSync(file)) return this.generatePath()
-    return file
-  }
-
-  static generateId() {
-    return Array
-      .from({ length: 5 }, () => CHARS[Math.floor(Math.random() * CHARS.length)])
-      .join('')
   }
 }
 

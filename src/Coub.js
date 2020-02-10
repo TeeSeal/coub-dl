@@ -4,7 +4,7 @@ const TempFile = require('./TempFile')
 const { sep } = require('path')
 
 class Coub extends FFmkek {
-  constructor(video, audio, { width, height, metadata, tempFiles }) {
+  constructor(video, audio, { width, height, metadata}) {
     super(video)
     this.video = video
     this.audio = audio
@@ -12,8 +12,6 @@ class Coub extends FFmkek {
     this.height = height
     this.metadata = metadata
     this.duration = metadata.duration
-
-    this.tempFiles = tempFiles || []
   }
 
   crop(crop) {
@@ -50,19 +48,12 @@ class Coub extends FFmkek {
 
     const path = this.video.split(sep).join('/').replace(' ', '\\ ')
     const list = new TempFile(`file ${path}\n`.repeat(times), 'txt').writeSync()
-    this.tempFiles.push(list)
     this.parts[0].remove()
 
     return this
       .addOption('-f', 'concat')
       .addOption('-safe', '0')
       .addInput(list.path)
-  }
-
-  async run() {
-    const result = await super.run()
-    this.tempFiles.forEach(file => file.delete())
-    return result
   }
 
   static async fetch(url, quality) {
@@ -94,8 +85,7 @@ class Coub extends FFmkek {
     return new Coub(video.path, audioURL, {
       width,
       height,
-      metadata,
-      tempFiles: [video]
+      metadata
     })
   }
 }
