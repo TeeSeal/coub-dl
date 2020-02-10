@@ -60,29 +60,22 @@ class Coub extends FFmkek {
     if (!['high', 'med'].includes(quality)) quality = 'high'
     const id = url.split('/').slice(-1)[0]
 
-    const { data: metadata } = await axios.get(
-      `http://coub.com/api/v2/coubs/${id}`
-    )
+    const { data: metadata } = await axios.get(`http://coub.com/api/v2/coubs/${id}`)
     if (!metadata) return null
 
     const { video: videoURLs, audio: audioURLs } = metadata.file_versions.html5
-    const [videoURL, audioURL] = [videoURLs, audioURLs].map(
-      obj => (obj[quality] || obj.med).url
-    )
+    const [videoURL, audioURL] = [videoURLs, audioURLs].map(obj => (obj[quality] || obj.med).url)
 
-    const [width, height] = metadata.dimensions[
-      quality === 'high' ? 'big' : 'med'
-    ]
+    const [width, height] = metadata.dimensions[quality === 'high' ? 'big' : 'med']
 
-    const { data: videoStream } = await axios.get(videoURL, {
-      responseType: 'stream'
-    })
-
-    // Decode weird Coub encoding.
-    videoStream.once('data', buffer => (buffer[0] = buffer[1] = 0))
+    const { data: videoStream } = await axios.get(videoURL, { responseType: 'stream' })
+    videoStream.once('data', buffer => (buffer[0] = buffer[1] = 0)) // Decode weird Coub encoding.
     const video = await new TempFile(videoStream, 'mp4').write()
 
-    return new Coub(video.path, audioURL, {
+    const { data: audioStream } = await axios.get(audioURL, { responseType: 'stream' })
+    const audio = await new TempFile(audioStream, 'mp3').write()
+
+    return new Coub(video.path, audio.path, {
       width,
       height,
       metadata
