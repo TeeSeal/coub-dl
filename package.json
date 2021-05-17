@@ -20,6 +20,6 @@
     "tempy": "^0.3.0"
   },
   "devDependencies": {
-    "eslint": "^6.0.1"
+    "eslint": "^7.26.0"
   }
 }
