@@ -4,14 +4,21 @@ const { sep } = require('path')
 const { Readable } = require('stream')
 
 class Coub extends FFmkek {
-  constructor(video, audio, { width, height, metadata }) {
-    super(video)
-    this.video = video
-    this.audio = audio
-    this.width = width
-    this.height = height
+  constructor(metadata) {
+    super()
+
     this.metadata = metadata
     this.duration = metadata.duration
+    this.urls = metadata.file_versions.html5
+    ;[this.width, this.height] = metadata.dimensions['big']
+
+    this.videoURL = this.videoInput = this.urls.video.high.url || this.urls.video.med.url
+    this.audioURL = this.audioInput = this.urls.audio.high.url || this.urls.audio.med.url
+
+    this.videoPart = this.currentPart
+    this.audioPart = null
+
+    this.addInput(this.videoInput)
   }
 
   crop(crop) {
@@ -40,48 +47,57 @@ class Coub extends FFmkek {
   }
 
   attachAudio() {
-    return this.addInput(this.audio)
+    this.audioPart = this.currentPart
+    return this.addInput(this.audioInput)
   }
 
   loop(times) {
     if (times < 2) return this
 
-    const path = this.video.split(sep).join('/').replace(' ', '\\ ')
+    const path = this.videoInput.split(sep).join('/').replace(' ', '\\ ')
     const list = new TempFile(`file ${path}\n`.repeat(times), 'txt').writeSync()
-    this.parts[0].remove()
 
-    return this
+    this.videoPart
+      .setName(list.path)
       .addOption('-f', 'concat')
       .addOption('-safe', '0')
-      .addInput(list.path)
+
+    return this
   }
 
-  static async fetch(url, quality) {
-    if (!['high', 'med'].includes(quality)) quality = 'high'
+  downloadSources() {
+    const promises = [this.downloadVideo()]
+    if (this.audioPart) promises.push(this.downloadAudio())
+    return Promise.all(promises)
+  }
+
+  async downloadVideo() {
+    if (!this.videoInput.startsWith('http')) return
+
+    const videoStream = await fetch(this.videoURL).then(response => Readable.from(response.body))
+    videoStream.once('data', buffer => (buffer[0] = buffer[1] = 0)) // Decode weird Coub encoding.
+    const video = await new TempFile(videoStream, 'mp4').write()
+
+    this.videoInput = this.videoPart.name = video.path
+  }
+
+  async downloadAudio() {
+    const audioStream = await fetch(this.audioURL).then(response => Readable.from(response.body))
+    const audio = await new TempFile(audioStream, 'mp3').write()
+
+    this.audioInput = this.audioPart.name = audio.path
+  }
+
+  static async fetch(url) {
     const id = url.split('/').slice(-1)[0]
 
     const response = await fetch(`http://coub.com/api/v2/coubs/${id}`)
     const metadata = await response.json()
 
-    if (!response.ok) throw new Error(metadata.error || 'Encountered and error while fetching the Coub')
+    if (!response.ok)
+      throw new Error(metadata.error || 'Encountered and error while fetching the Coub')
 
-    const { video: videoURLs, audio: audioURLs } = metadata.file_versions.html5
-    const [videoURL, audioURL] = [videoURLs, audioURLs].map(obj => (obj[quality] || obj.med).url)
-
-    const [width, height] = metadata.dimensions[quality === 'high' ? 'big' : 'med']
-
-    const videoStream = await fetch(videoURL).then(response => Readable.from(response.body))
-    videoStream.once('data', buffer => (buffer[0] = buffer[1] = 0)) // Decode weird Coub encoding.
-    const video = await new TempFile(videoStream, 'mp4').write()
-
-    const audioStream = await fetch(audioURL).then(response => Readable.from(response.body))
-    const audio = await new TempFile(audioStream, 'mp3').write()
-
-    return new Coub(video.path, audio.path, {
-      width,
-      height,
-      metadata
-    })
+    return new Coub(metadata)
   }
 }
 

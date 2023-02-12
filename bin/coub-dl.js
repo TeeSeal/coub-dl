@@ -49,8 +49,10 @@ async function run() {
 
   const coub = await Coub.fetch(input)
 
-  if (loop) coub.loop(loop)
   if (audio) coub.attachAudio()
+  await coub.downloadSources() // speeds things up
+
+  if (loop) coub.loop(loop)
   if (crop) coub.crop(crop)
   if (scale) coub.scale(scale)
   if (time) coub.addOption('-t', time)
