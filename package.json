@@ -11,7 +11,8 @@
   },
   "bin": {
     "coub-dl": "bin/coub-dl.js",
-    "coub-dl-mp3": "bin/coub-dl-mp3.js"
+    "coub-dl-mp3": "bin/coub-dl-mp3.js",
+    "coub-dl-channel": "bin/coub-dl-channel.js"
   },
   "dependencies": {
     "commander": "^4.1.0",

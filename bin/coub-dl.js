@@ -2,7 +2,7 @@
 
 const Coub = require('../')
 const { version } = require('../package')
-const { resolvePath } = require('../src/Util')
+const { resolvePath, downloadCoub } = require('../src/Util')
 
 // CLI Setup
 const program = require('commander')
@@ -42,26 +42,14 @@ program.parse(process.argv)
 
 // Main
 async function run() {
-  const { input, output, loop, audio, crop, scale, time, details, format } = program
+  const { input, output, format } = program
   if (!input) {
     return console.log('Please specify input. Use --help to see the list of options.')
   }
 
   const coub = await Coub.fetch(input)
-
-  if (audio) coub.attachAudio()
-  await coub.downloadSources() // speeds things up
-
-  if (loop) coub.loop(loop)
-  if (crop) coub.crop(crop)
-  if (scale) coub.scale(scale)
-  if (time) coub.addOption('-t', time)
-  if (details) coub.on('info', console.log)
-  if (!crop && !scale) coub.addOption('-c:v:0', 'copy')
-  coub.addOption('-shortest')
-
   const path = resolvePath(output, coub.metadata.title, format)
-  return coub.write(path)
+  downloadCoub(coub, path, program)
 }
 
 run()

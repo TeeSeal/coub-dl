@@ -21,6 +21,10 @@ class Coub extends FFmkek {
     this.addInput(this.videoInput)
   }
 
+  get url() {
+    return `https://coub.com/view/${this.metadata.permalink}`
+  }
+
   crop(crop) {
     if (typeof crop !== 'string') {
       const offset = this.width / 2 - this.height / 2
