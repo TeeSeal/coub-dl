@@ -90,8 +90,15 @@ class Coub extends FFmkek {
 
   static async fetch(url) {
     const id = url.split('/').slice(-1)[0]
-
     const response = await fetch(`http://coub.com/api/v2/coubs/${id}`)
+
+    // Check if coub was moved
+    if (response.status == 404) {
+      const webURL = `https://coub.com/view/${id}`
+      const webResponse = await fetch(webURL)
+      if (webResponse.url !== webURL) return Coub.fetch(webResponse.url)
+    }
+
     const metadata = await response.json()
 
     if (!response.ok)
