@@ -1,10 +1,10 @@
 const FFmkek = require('ffmkek')
-const axios = require('axios')
 const TempFile = require('./TempFile')
 const { sep } = require('path')
+const { Readable } = require('stream')
 
 class Coub extends FFmkek {
-  constructor(video, audio, { width, height, metadata}) {
+  constructor(video, audio, { width, height, metadata }) {
     super(video)
     this.video = video
     this.audio = audio
@@ -60,19 +60,21 @@ class Coub extends FFmkek {
     if (!['high', 'med'].includes(quality)) quality = 'high'
     const id = url.split('/').slice(-1)[0]
 
-    const { data: metadata } = await axios.get(`http://coub.com/api/v2/coubs/${id}`)
-    if (!metadata) return null
+    const response = await fetch(`http://coub.com/api/v2/coubs/${id}`)
+    const metadata = await response.json()
+
+    if (!response.ok) throw new Error(metadata.error || 'Encountered and error while fetching the Coub')
 
     const { video: videoURLs, audio: audioURLs } = metadata.file_versions.html5
     const [videoURL, audioURL] = [videoURLs, audioURLs].map(obj => (obj[quality] || obj.med).url)
 
     const [width, height] = metadata.dimensions[quality === 'high' ? 'big' : 'med']
 
-    const { data: videoStream } = await axios.get(videoURL, { responseType: 'stream' })
+    const videoStream = await fetch(videoURL).then(response => Readable.from(response.body))
     videoStream.once('data', buffer => (buffer[0] = buffer[1] = 0)) // Decode weird Coub encoding.
     const video = await new TempFile(videoStream, 'mp4').write()
 
-    const { data: audioStream } = await axios.get(audioURL, { responseType: 'stream' })
+    const audioStream = await fetch(audioURL).then(response => Readable.from(response.body))
     const audio = await new TempFile(audioStream, 'mp3').write()
 
     return new Coub(video.path, audio.path, {

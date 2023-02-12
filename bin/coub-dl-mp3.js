@@ -2,8 +2,8 @@
 
 const { version } = require('../package')
 const { resolvePath } = require('../src/Util')
-const axios = require('axios')
 const { createWriteStream } = require('fs')
+const { Readable } = require('stream')
 
 // CLI Setup
 const program = require('commander')
@@ -31,18 +31,16 @@ async function run() {
   }
 
   const id = input.split('/').slice(-1)[0]
-  const { data } = await axios.get(`http://coub.com/api/v2/coubs/${id}`).catch(() => ({}))
-  if (!data) {
-    return console.log(
-      'Couldn\'t fetch your coub. Please check the url/id and try again.'
-    )
-  }
+  const response = await fetch(`http://coub.com/api/v2/coubs/${id}`)
+  const data = await response.json()
+
+  if (!response.ok) throw new Error(data.error || 'Encountered and error while fetching the Coub')
 
   const audioURLs = data.file_versions.html5.audio
   const url = audioURLs.high.url || audioURLs.med.url
   const path = resolvePath(output, data.title, 'mp3')
 
-  const { data: mp3 } = await axios.get(url, { responseType: 'stream' })
+  const mp3 = await fetch(url).then(response => Readable.from(response.body))
   mp3.pipe(createWriteStream(path))
 }
 

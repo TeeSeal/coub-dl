@@ -47,12 +47,7 @@ async function run() {
     return console.log('Please specify input. Use --help to see the list of options.')
   }
 
-  const coub = await Coub.fetch(input).catch(() => null)
-  if (!coub) {
-    return console.log(
-      'Couldn\'t fetch your coub. Please check the url/id and try again.'
-    )
-  }
+  const coub = await Coub.fetch(input)
 
   if (loop) coub.loop(loop)
   if (audio) coub.attachAudio()
