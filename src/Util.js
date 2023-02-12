@@ -1,5 +1,4 @@
-const { extname } = require('path')
-const pathLib = require('path')
+const { extname, join } = require('path')
 
 class Util {
   constructor() {
@@ -11,11 +10,16 @@ class Util {
       name = name.replace(Util.illegalPathCharacters, '')
     }
 
-    if (isDirectory) path = pathLib.join(path || '', name)
-    else if (!path) path = name
+    const nameExt = `${name}.${ext}`
 
-    path = path.replace(/:name:/g, name)
-    if (!extname(path)) path += `.${ext}`
+    if (isDirectory) {
+      path = join(path || '', nameExt)
+    } else if (path) {
+      path = path.replace(/:name:/g, name)
+      if (!extname(path)) path += `.${ext}`
+    } else {
+      path = nameExt
+    }
 
     return path
   }
