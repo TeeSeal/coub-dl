@@ -74,7 +74,6 @@ async function run() {
     if (page === responseJSON.total_pages) break
     page += 1
     url.searchParams.set('page', page)
-    break
   }
 }
 
