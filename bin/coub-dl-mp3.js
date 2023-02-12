@@ -2,6 +2,7 @@
 
 const { version } = require('../package')
 const { resolvePath } = require('../src/Util')
+const Coub = require('../')
 const { createWriteStream } = require('fs')
 const { Readable } = require('stream')
 
@@ -30,18 +31,11 @@ async function run() {
     return console.log('Please specify input. Use --help to see the list of options.')
   }
 
-  const id = input.split('/').slice(-1)[0]
-  const response = await fetch(`http://coub.com/api/v2/coubs/${id}`)
-  const data = await response.json()
+  const coub = await Coub.fetch(input)
+  const path = resolvePath(output, coub.metadata.title, 'mp3')
 
-  if (!response.ok) throw new Error(data.error || 'Encountered and error while fetching the Coub')
-
-  const audioURLs = data.file_versions.html5.audio
-  const url = audioURLs.high.url || audioURLs.med.url
-  const path = resolvePath(output, data.title, 'mp3')
-
-  const mp3 = await fetch(url).then(response => Readable.from(response.body))
-  mp3.pipe(createWriteStream(path))
+  const response = await fetch(coub.audioURL)
+  Readable.from(response.body).pipe(createWriteStream(path))
 }
 
 run()
