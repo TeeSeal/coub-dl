@@ -1,5 +1,6 @@
 const FFmkek = require('ffmkek')
 const TempFile = require('./TempFile')
+const { fetchWithRetry } = require('./Util')
 const { sep } = require('path')
 const { Readable } = require('stream')
 
@@ -85,7 +86,7 @@ class Coub extends FFmkek {
   async downloadVideo() {
     if (!this.videoInput.startsWith('http')) return
 
-    const videoStream = await fetch(this.videoURL).then(response => Readable.from(response.body))
+    const videoStream = await fetchWithRetry(this.videoURL).then(response => Readable.from(response.body))
     videoStream.once('data', buffer => (buffer[0] = buffer[1] = 0)) // Decode weird Coub encoding.
     const video = await new TempFile(videoStream, 'mp4').write()
 
@@ -93,7 +94,7 @@ class Coub extends FFmkek {
   }
 
   async downloadAudio() {
-    const audioStream = await fetch(this.audioURL).then(response => Readable.from(response.body))
+    const audioStream = await fetchWithRetry(this.audioURL).then(response => Readable.from(response.body))
     const audio = await new TempFile(audioStream, 'mp3').write()
 
     this.audioInput = this.audioPart.name = audio.path
@@ -101,12 +102,12 @@ class Coub extends FFmkek {
 
   static async fetch(url) {
     const id = url.split('/').slice(-1)[0]
-    const response = await fetch(`http://coub.com/api/v2/coubs/${id}`)
+    const response = await fetchWithRetry(`http://coub.com/api/v2/coubs/${id}`)
 
     // Check if coub was moved
     if (response.status == 404) {
       const webURL = `https://coub.com/view/${id}`
-      const webResponse = await fetch(webURL)
+      const webResponse = await fetchWithRetry(webURL)
       if (webResponse.url !== webURL) return Coub.fetch(webResponse.url)
     }
 

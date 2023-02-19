@@ -41,6 +41,10 @@ class Util {
     coub.write(targetPath)
   }
 
+  static fetchWithRetry(...args) {
+    return fetch(...args).catch(() => fetch(...args))
+  }
+
   static get illegalPathCharacters() {
     return /[/\\?%*:|"<>]/g
   }
