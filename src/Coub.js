@@ -7,13 +7,18 @@ class Coub extends FFmkek {
   constructor(metadata) {
     super()
 
+    while (metadata.type === 'Coub::Recoub') metadata = metadata.recoub_to
+
     this.metadata = metadata
     this.duration = metadata.duration
     this.urls = metadata.file_versions.html5
     ;[this.width, this.height] = metadata.dimensions['big']
 
     this.videoURL = this.videoInput = this.urls.video.high.url || this.urls.video.med.url
-    this.audioURL = this.audioInput = this.urls.audio.high.url || this.urls.audio.med.url
+
+    if (this.urls.audio) {
+      this.audioURL = this.audioInput = this.urls.audio.high.url || this.urls.audio.med.url
+    }
 
     this.videoPart = this.currentPart
     this.audioPart = null
@@ -51,6 +56,8 @@ class Coub extends FFmkek {
   }
 
   attachAudio() {
+    if (!this.audioInput) return this
+
     this.audioPart = this.currentPart
     return this.addInput(this.audioInput)
   }
