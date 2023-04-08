@@ -25,14 +25,25 @@ const program = require('commander')
     'use in order to view the logs from ffmpeg while it works'
   )
   .option('-f, --format <format>', 'output file format (mp4, gif etc.)')
+  .option(
+    '--group <amount>',
+    'number of coubs to download at once'
+  )
+  .option(
+    '--delay [seconds]',
+    'amount of secounds to wait between downloading groups of coubs. Defaults to 3.',
+    '3'
+  )
+  .option('--limit <amount>', 'maximum amount of coubs to download')
 
 program.on('--help', () => {
   const examples = [
     '\n  Examples:\n',
-    '    coub-dl --input https://coub.com/past.memories --no-audio --output ./past.memories',
-    '    coub-dl -i https://coub.com/past.memories -o ./past_memories --crop --scale 250',
-    '    coub-dl -i https://coub.com/past.memories -o ./past_memories --loop 3',
-    '    coub-dl -i https://coub.com/past.memories -o ./past_memories --loop 10 --time 12',
+    '    coub-dl-channel --input https://coub.com/past.memories --no-audio --output ./past.memories',
+    '    coub-dl-channel -i https://coub.com/past.memories -o ./past_memories --crop --scale 250',
+    '    coub-dl-channel -i https://coub.com/past.memories -o ./past_memories --loop 3',
+    '    coub-dl-channel -i https://coub.com/past.memories -o ./past_memories --loop 10 --time 12',
+    '    coub-dl-channel -i https://coub.com/past.memories -o ./past_memories --group 10 --delay 5',
     '\n  Notes:\n',
     '    Provided options will be applied to all coubs on the channel feed.',
     '    Depending on the amount of coubs, this may be a very lengthy process.'
@@ -45,7 +56,7 @@ program.parse(process.argv)
 
 // Main
 async function run() {
-  const { input, output, format } = program
+  const { input, output, format, group, delay, limit } = program
   if (!input) {
     return console.log('Please specify input. Use --help to see the list of options.')
   }
@@ -56,6 +67,8 @@ async function run() {
   url.searchParams.set('page', 1)
   url.searchParams.set('per_page', 25)
 
+  let dynamicLimit = limit
+
   for (;;) {
     const response = await fetch(url)
     const responseJSON = await response.json()
@@ -63,18 +76,46 @@ async function run() {
     if (!response.ok)
       throw new Error(responseJSON.error || 'Encountered and error while fetching channel data')
 
+    const coubs = responseJSON.coubs.slice(0, dynamicLimit)
+    const groups = groupArray(coubs, group)
 
-    responseJSON.coubs.forEach(async metadata => {
-      const coub = new Coub(metadata)
-      const path = resolvePath(output, `[${coub.metadata.permalink}] ${coub.metadata.title}`, format, true)
-      console.log(`Downloading ${coub.url} to ${path}`)
-      downloadCoub(coub, path, program)
-    })
+    for (const group of groups) {
+      group.forEach(async metadata => {
+        const coub = new Coub(metadata)
+        const path = resolvePath(output, `[${coub.metadata.permalink}] ${coub.metadata.title}`, format, true)
+        console.log(`Downloading ${coub.url} to ${path}`)
+        downloadCoub(coub, path, program)
+      })
+
+      await sleep(delay)
+    }
+
+    dynamicLimit -= coubs.length
+    if (dynamicLimit <= 0) break
 
     if (page === responseJSON.total_pages) break
     page += 1
     url.searchParams.set('page', page)
   }
+}
+
+function groupArray(array, chunkSize) {
+  if (!chunkSize) return [array]
+
+  chunkSize = parseInt(chunkSize)
+  array = [...array]
+  const result = []
+
+  while (array.length) {
+    result.push(array.splice(0, chunkSize))
+  }
+
+  return result
+}
+
+function sleep(seconds) {
+  seconds = parseInt(seconds)
+  return new Promise(reslove => setTimeout(reslove, seconds * 1000))
 }
 
 run()
