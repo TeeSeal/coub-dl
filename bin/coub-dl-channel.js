@@ -67,7 +67,7 @@ async function run() {
   url.searchParams.set('page', 1)
   url.searchParams.set('per_page', 25)
 
-  let dynamicLimit = limit
+  let dynamicLimit = parseInt(limit) || Infinity
 
   for (;;) {
     const response = await fetch(url)
