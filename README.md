@@ -48,13 +48,13 @@ Examples:
 
 ```sh
 # Download coub without audio
-$ coub-dl --input https://coub.com/view/135nqc --output out.mp4 --no-audio -C
+$ coub-dl --input https://coub.com/view/135nqc --output out.mp4 --no-audio
 # Download coub as gif, crop it as a square and scale it down to 250x250
 $ coub-dl -i https://coub.com/view/135nqc -o out.gif --crop --scale 250
 # Download coub and loop it 3 times
-$ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 3 -C
+$ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 3
 # Download coub and make sure it's no longer than 12 seconds
-$ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 10 --time 12 -C
+$ coub-dl -i https://coub.com/view/135nqc -o out.mp4 --loop 10 --time 12
 ```
 
 ### Downloading coub for full length of audio
